@@ -1,0 +1,29 @@
+name: Unzip ZIP Files Automatically
+
+on:
+  push:
+    paths:
+      - '**.zip'  # Kích hoạt khi có file .zip được push lên repo
+
+jobs:
+  unzip-job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: List all ZIP files
+        run: |
+          echo "Các file ZIP:"
+          find . -name "*.zip"
+
+      - name: Unzip all ZIP files
+        run: |
+          mkdir -p extracted
+          for file in $(find . -name "*.zip"); do
+            unzip -o "$file" -d extracted/
+          done
+
+      - name: Show extracted content
+        run: ls -R extracted
